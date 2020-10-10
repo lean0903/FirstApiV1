@@ -18,5 +18,7 @@ namespace SocialMedia.Core.Entities
 
         public virtual User User { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+
+      
     }
 }

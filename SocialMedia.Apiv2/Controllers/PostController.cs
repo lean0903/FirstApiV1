@@ -30,6 +30,14 @@ namespace SocialMedia.API.Controllers
         {
             return Ok(await _postRepository.GetPost(id));
         }
-    
+        [HttpPost]
+        public async Task<IActionResult> Post(Post post)
+        {
+           await _postRepository.InsertPost(post);
+            return Ok(post);
+        } 
+
+
+
     }
 }
