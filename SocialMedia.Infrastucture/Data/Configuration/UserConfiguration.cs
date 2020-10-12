@@ -11,7 +11,7 @@ namespace SocialMedia.Infrastucture.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-                builder.ToTable("Usuarios");
+                builder.ToTable("Usuario");
 
 
                 builder.HasKey(e => e.UserId);
@@ -20,7 +20,7 @@ namespace SocialMedia.Infrastucture.Data.Configuration
                 .HasColumnName("IdUsuario");
 
                 builder.Property(e => e.LastName)
-                    .HasColumnName("Nombres")
+                    .HasColumnName("Apellidos")
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -35,7 +35,7 @@ namespace SocialMedia.Infrastucture.Data.Configuration
                 .HasColumnType("date");
 
                 builder.Property(e => e.FirstName)
-                    .HasColumnName("Nombre")
+                    .HasColumnName("Nombres")
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -44,6 +44,8 @@ namespace SocialMedia.Infrastucture.Data.Configuration
                     .HasColumnName("Telefono")
                     .HasMaxLength(10)
                     .IsUnicode(false);
+            builder.Property(e => e.IsActive).HasColumnName("Activo");
+
          
         }
     }

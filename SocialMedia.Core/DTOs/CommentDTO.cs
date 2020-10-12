@@ -4,7 +4,17 @@ using System.Text;
 
 namespace SocialMedia.Core.DTOs
 {
-    class CommentDTO
+    public class CommentDTO
     {
+        public int CommentID { get; set; }
+        public int PostId { get; set; }
+        public int UserId { get; set; }
+        public string Description { get; set; }
+        public DateTime Date { get; set; }
+        public bool IsActive { get; set; }
+
+    
     }
+
 }
+
