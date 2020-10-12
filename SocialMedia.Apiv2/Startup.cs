@@ -36,9 +36,10 @@ namespace SocialMedia.Apiv2
             {
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            services.AddTransient<IPostRepository, PostRepository>();
+            //services.AddTransient<IPostRepository, PostRepository>(); Se tenia un repositorio por cada clase y se remplazo por una generica.
             services.AddTransient<IPostService, PostService>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            //services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));//cuando una clase estemos usando una interface la replazamos por BaseRepostory ç,  se usa scope en vez de transient por el tipo de vidad de la implementancion
             services.AddDbContext<SocialMediaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
             //busca los profiles del automapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

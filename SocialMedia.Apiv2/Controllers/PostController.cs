@@ -30,7 +30,7 @@ namespace SocialMedia.API.Controllers
             var postsDTO = _mapper.Map<IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public async Task<IActionResult>GetPost(int id)
         {
             var post = await _postService.GetPost(id);

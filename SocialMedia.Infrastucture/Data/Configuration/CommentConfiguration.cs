@@ -13,9 +13,9 @@ namespace SocialMedia.Infrastucture.Data.Configuration
         {
            builder.ToTable("Comentario");
 
-           builder.HasKey(e => e.CommentID);
+           builder.HasKey(e => e.Id);
 
-           builder.Property(e => e.CommentID)
+           builder.Property(e => e.Id)
             .HasColumnName("IdComentario")
             .ValueGeneratedNever();
 

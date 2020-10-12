@@ -6,7 +6,8 @@ namespace SocialMedia.Core.Entities
 {
     public abstract class BaseEntiy
     {
-        public int id { get; set; }
+        public int Id { get; set; }
+
 
     }
 }
