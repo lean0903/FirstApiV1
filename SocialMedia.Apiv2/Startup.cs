@@ -42,6 +42,7 @@ namespace SocialMedia.Apiv2
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));//cuando una clase estemos usando una interface la replazamos por BaseRepostory ç,  se usa scope en vez de transient por el tipo de vidad de la implementancion
             services.AddDbContext<SocialMediaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
             //busca los profiles del automapper
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
