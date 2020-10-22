@@ -2,6 +2,7 @@
 using SocialMedia.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,12 +47,20 @@ namespace SocialMedia.Core.Services
             {
                 throw new Exception("el usuario no es valido");
             }
+            var userPost = await _unitOfWork.PostRepository.GetPostsByUser(user.Id);
+            if(userPost.Count()<10)
+            {
+                var lastPost = userPost.LastOrDefault();
+                if ((DateTime.Now - lastPost.Date).TotalDays < 7)
+                    throw new Exception("el Usuario no tiene permito publicar");
+            }
             if(post.Description.Contains("sexo"))
             {
                 throw new Exception("the description contain sexo");
             }
 
             await _unitOfWork.PostRepository.Add(post);
+            await _unitOfWork.saveChangesAsync();
         }
 
         public async Task <bool> UpdatePost(Post post)
