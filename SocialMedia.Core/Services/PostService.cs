@@ -1,4 +1,5 @@
 ﻿using SocialMedia.Core.Entities;
+using SocialMedia.Core.Exceptions;
 using SocialMedia.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -45,18 +46,18 @@ namespace SocialMedia.Core.Services
             var user = await _unitOfWork.PostRepository.GetById(post.UserId);
             if (user == null)
             {
-                throw new Exception("el usuario no es valido");
+                throw new BusinessExceptions("el usuario no es valido");
             }
             var userPost = await _unitOfWork.PostRepository.GetPostsByUser(user.Id);
             if(userPost.Count()<10)
             {
                 var lastPost = userPost.LastOrDefault();
                 if ((DateTime.Now - lastPost.Date).TotalDays < 7)
-                    throw new Exception("el Usuario no tiene permito publicar");
+                    throw new BusinessExceptions("el Usuario no tiene permito publicar");
             }
             if(post.Description.Contains("sexo"))
             {
-                throw new Exception("the description contain sexo");
+                throw new BusinessExceptions("the description contain sexo");
             }
 
             await _unitOfWork.PostRepository.Add(post);

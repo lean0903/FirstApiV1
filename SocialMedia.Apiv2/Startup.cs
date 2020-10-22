@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Services;
 using SocialMedia.Infrastucture.Data;
+using SocialMedia.Infrastucture.Filters;
 using SocialMedia.Infrastucture.Repositories;
 
 namespace SocialMedia.Apiv2
@@ -32,7 +33,9 @@ namespace SocialMedia.Apiv2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(option =>
+            services.AddControllers(option=>
+            option.Filters.Add<GlobalExceptionFilter>()//filtro de excepciones
+            ).AddNewtonsoftJson(option =>
             {
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
