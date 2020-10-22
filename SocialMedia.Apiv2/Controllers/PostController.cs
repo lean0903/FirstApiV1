@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SocialMedia.Apiv2.Responses;
 using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
@@ -28,33 +29,43 @@ namespace SocialMedia.API.Controllers
         {
             var posts =  _postService.GetPosts();
             var postsDTO = _mapper.Map<IEnumerable<PostDTO>>(posts);
-            return Ok(postsDTO);
+            var response = new ApiResponse<IEnumerable<PostDTO>>(postsDTO);
+            return Ok(response);
         }
         [HttpGet("{Id}")]
         public async Task<IActionResult>GetPost(int id)
         {
             var post = await _postService.GetPost(id);
             var postsDTO = _mapper.Map<PostDTO>(post);
-
-            return Ok(postsDTO);
+           var response = new ApiResponse<PostDTO>(postsDTO);
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> Post(PostDTO postDTO)
         {
-            var post = _mapper.Map<Post>(postDTO);
-           await _postService.InsertPost(post);
-            return Ok(postDTO);
+
+           var post = _mapper.Map<Post>(postDTO);
+            await _postService.InsertPost(post);
+            postDTO = _mapper.Map<PostDTO>(post);//se le asigna el id
+            var response = new ApiResponse<PostDTO>(postDTO);
+            return Ok(response);
         } 
         [HttpPut]
         public async Task<IActionResult>Put (PostDTO postDTO)
         {
+            
             var post = _mapper.Map<Post>(postDTO);
-            return Ok(await _postService.UpdatePost(post));
+            var result = await _postService.UpdatePost(post);
+            var response = new ApiResponse<bool>(result);
+            return Ok();
         }
         [HttpDelete("{idPost}")]
         public async Task<IActionResult> Delete(int idPost)
         {
-            return Ok(await _postService.DeletePost(idPost));
+            var result = await _postService.DeletePost(idPost);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response); 
+
         }
 
 
