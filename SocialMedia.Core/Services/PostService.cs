@@ -33,9 +33,9 @@ namespace SocialMedia.Core.Services
             return await _unitOfWork.PostRepository.GetById(id);
         }
 
-        public async Task<IEnumerable<Post>> GetPosts()
+        public  IEnumerable<Post> GetPosts()
         {
-            return await _unitOfWork.PostRepository.GetAll();
+            return  _unitOfWork.PostRepository.GetAll();
 
         }
 
@@ -54,11 +54,12 @@ namespace SocialMedia.Core.Services
             await _unitOfWork.PostRepository.Add(post);
         }
 
-        public async Task<bool> UpdatePost(Post post)
+        public async Task <bool> UpdatePost(Post post)
 
         {
-            await _unitOfWork.PostRepository.Update(post);
-            return true;
+             _unitOfWork.PostRepository.Update(post);
+             await _unitOfWork.saveChangesAsync();
+             return true;
 
         }
     }

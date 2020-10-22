@@ -24,9 +24,9 @@ namespace SocialMedia.API.Controllers
             _mapper = map;
         }
         [HttpGet]
-        public async Task<IActionResult> GetPosts()
+        public  IActionResult GetPosts()
         {
-            var posts = await _postService.GetPosts();
+            var posts =  _postService.GetPosts();
             var postsDTO = _mapper.Map<IEnumerable<PostDTO>>(posts);
             return Ok(postsDTO);
         }

@@ -38,7 +38,7 @@ namespace SocialMedia.Infrastucture.Repositories
 
         public async Task saveChangesAsync()
         {
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }
