@@ -1,6 +1,9 @@
-﻿using SocialMedia.Core.Entities;
+﻿using Microsoft.Extensions.Options;
+using SocialMedia.Core.CustomEntities;
+using SocialMedia.Core.Entities;
 using SocialMedia.Core.Exceptions;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Core.QueryFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +21,12 @@ namespace SocialMedia.Core.Services
         //private readonly IRepository<User> _userRepository;
 
         private readonly IUnitOfWork _unitOfWork;
+        private readonly PaginationOption _pagination;
 
-        public PostService(IUnitOfWork unitOfWork)
+        public PostService(IUnitOfWork unitOfWork,IOptions<PaginationOption> options)
         {
             _unitOfWork = unitOfWork;
+            _pagination = options.Value;
         }
 
         public async Task<bool> DeletePost(int postId)
@@ -35,9 +40,27 @@ namespace SocialMedia.Core.Services
             return await _unitOfWork.PostRepository.GetById(id);
         }
 
-        public  IEnumerable<Post> GetPosts()
+        public  PageList<Post> GetPosts(PostQueryFilters filters)
         {
-            return  _unitOfWork.PostRepository.GetAll();
+            filters.pageNumber = filters.pageNumber == 0 ? _pagination.DefaultPageNumber : filters.pageNumber;
+            filters.pageSize = filters.pageSize == 0 ? _pagination.DefaultPageSize : filters.pageSize;
+
+
+            var posts = _unitOfWork.PostRepository.GetAll();
+            if (filters.UserId != null)
+            {
+                posts = posts.Where(x => x.UserId == filters.UserId);
+            }
+            if (filters.Date != null)
+            {
+                posts = posts.Where(x => x.Date.ToShortDateString() == filters.Date?.ToShortDateString());
+            }
+            if (filters.Description != null)
+            {
+                posts = posts.Where(x => x.Description.ToLower().Contains(filters.Description));
+            }
+            var pagePOsts = PageList<Post>.Create(posts, filters.pageNumber, filters.pageSize);
+            return pagePOsts;
 
         }
 
