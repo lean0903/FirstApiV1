@@ -18,6 +18,7 @@ using SocialMedia.Infrastucture.Service;
 
 namespace SocialMedia.API.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -32,6 +33,11 @@ namespace SocialMedia.API.Controllers
             _mapper = map;
             _urlService = urlService;
         }
+        /// <summary>
+        /// Devuelve todos los posts a partir de un filtro
+        /// </summary>
+        /// <param name="filter"> filters a aplicar </param>
+        /// <returns> </returns>
         [HttpGet (Name =nameof(GetPosts))]
         //se utiliza para documentar la aplicacion con swagger 
         [ProducesResponseType((int)HttpStatusCode.OK,Type =typeof(ApiResponse<IEnumerable<PostDTO>>)) ]

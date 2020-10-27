@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using SocialMedia.Core.CustomEntities;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Services;
@@ -37,7 +40,7 @@ namespace SocialMedia.Apiv2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(option=>
+            services.AddControllers(option =>
             option.Filters.Add<GlobalExceptionFilter>()//filtro de excepciones
             ).AddNewtonsoftJson(option =>
             {
@@ -57,13 +60,21 @@ namespace SocialMedia.Apiv2
             {
                 var accersor = provider.GetRequiredService<IHttpContextAccessor>();//obtien el httpClient que se genera e la ejecucio
                 var request = accersor.HttpContext.Request;//se obitiene el request
-                var absolutUri = string.Concat(request.Scheme, "://",request.Host.ToUriComponent());
+                var absolutUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UrlService(absolutUri);
 
 
             });//singleton genera una sola instancia para todas las ejecuciones
             services.Configure<PaginationOption>(Configuration.GetSection("Pagination")); //esta seccion mapea la configuracion
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSwaggerGen(doc =>
+            {
+                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "Social Media api", Version = "v1" });//agrega swagger
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                doc.IncludeXmlComments(xmlPath);
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +86,11 @@ namespace SocialMedia.Apiv2
             }
 
             app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(option => {
+                option.SwaggerEndpoint("/swagger/v1/swagger.json", "Social MEdia API");//agrega swagger UI
+                option.RoutePrefix=string.Empty;
+                });
 
             app.UseRouting();
 

@@ -20,7 +20,6 @@
     "SocialMedia.Apiv2": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/post",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
